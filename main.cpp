@@ -3,16 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#define N 55
+#define StringLength 55
 
 typedef struct node
 {
-    char category[N];
-    char place[N];
-    char street[2 * N];
+    char category[StringLength];
+    char place[StringLength];
+    char street[2 * StringLength];
     int area;
     int price;
-    char description[4 * N];
+    char description[4 * StringLength];
     struct node* next;
 } NODE;
 
@@ -148,9 +148,9 @@ NODE* z(NODE* first, int* number_of_nodes)
     NODE* current = first;
     int number_of_deleted_nodes = 0;
 
-    char delete_these_places[N];
+    char delete_these_places[StringLength];
     getchar();
-    gets_s(delete_these_places, N);
+    gets_s(delete_these_places, StringLength);
 
     if (current == NULL)
         return NULL;
@@ -161,7 +161,7 @@ NODE* z(NODE* first, int* number_of_nodes)
     for (i = 0; i < strlen(delete_these_places); i++)	// zmeni zadany text na male pismena
         delete_these_places[i] = tolower(delete_these_places[i]);
 
-    char place_from_node[N];
+    char place_from_node[StringLength];
     while (current_next != NULL) {
         for (i = 0; i < strlen(current_next->place); i++)	// zmeni nazov miesta v zazname na male pismena
             place_from_node[i] = tolower(current_next->place[i]);
@@ -233,9 +233,9 @@ void a(NODE* first)
     NODE* current = first;
     int number_of_updated_nodes = 0;
 
-    char update_these_places[N];
+    char update_these_places[StringLength];
     getchar();
-    gets_s(update_these_places, N);
+    gets_s(update_these_places, StringLength);
 
     NODE* updated_node = (NODE*)malloc(sizeof(NODE));
     scanf("%[^\n]s", &updated_node->category);	getchar();
@@ -253,7 +253,7 @@ void a(NODE* first)
     for (i = 0; i < strlen(update_these_places); i++)
         update_these_places[i] = tolower(update_these_places[i]);
 
-    char place_from_node[N];
+    char place_from_node[StringLength];
     while (current != NULL) {
         for (i = 0; i < strlen(current->place); i++)
             place_from_node[i] = tolower(current->place[i]);
