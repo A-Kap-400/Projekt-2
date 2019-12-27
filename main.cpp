@@ -28,7 +28,7 @@ void freeList(NODE** firstNode)
     }
 }
 
-void loadFile(NODE** first)
+void loadFile(NODE** first) // n
 {
     freeList(first);
 
@@ -72,47 +72,51 @@ void loadFile(NODE** first)
     printf("Nacitalo sa %d zaznamov\n", numberOfNodes);
 }
 
-void v(NODE* first)
+void printNode(NODE** currentNode)
 {
-    NODE* current = first;
+    printf("kategoria ponuky: %s\n", (*currentNode)->category);
+    printf("miesto ponuky: %s\n", (*currentNode)->place);
+    printf("ulica: %s\n", (*currentNode)->street);
+    printf("rozloha v m2: %d\n", (*currentNode)->area);
+    printf("cena: %d\n", (*currentNode)->price);
+    printf("popis: %s\n", (*currentNode)->description);
+}
 
-    if (current == NULL) {
+void printOutList(NODE* first)  // v
+{
+    if (first == NULL)
         return;
-    }
 
-    int serial_number = 1;
+    NODE* current = first;
+    int serialNumber = 1;
+
     while (current != NULL) {
-        printf("%d.\n", serial_number++);
-        printf("kategoria ponuky: %s\n", current->category);
-        printf("miesto ponuky: %s\n", current->place);
-        printf("ulica: %s\n", current->street);
-        printf("rozloha v m2: %d\n", current->area);
-        printf("cena: %d\n", current->price);
-        printf("popis: %s\n", current->description);
+        printf("%d.\n", serialNumber++);
+        printNode(&current);
         current = current->next;
     }
 }
 
-NODE* p(NODE* first, int* number_of_nodes)
+NODE* p(NODE* first, int* number_of_nodes)  // p
 {
     NODE* new_node = NULL;
     NODE* current = first;
     int position_of_new_node;
     scanf("%d", &position_of_new_node);
 
-    // nacitanie poloziek do noveho zaznamu:
+    /// nacitanie poloziek do noveho zaznamu:
     new_node = (NODE*)malloc(sizeof(NODE));
     getchar();
-    scanf("%[^\n]s", &new_node->category);		getchar();
-    scanf("%[^\n]s", &new_node->place);			getchar();
-    scanf("%[^\n]s", &new_node->street);
+    scanf("%[^\n]s", new_node->category);		getchar();
+    scanf("%[^\n]s", new_node->place);			getchar();
+    scanf("%[^\n]s", new_node->street);
     scanf("%d", &new_node->area);
     scanf("%d", &new_node->price);				getchar();
-    scanf("%[^\n]s", &new_node->description);	getchar();
+    scanf("%[^\n]s", new_node->description);	getchar();
     new_node->next = NULL;
     (*number_of_nodes)++;
 
-    //	pridanie zaznamu na zaciatok zoznamu
+    ///	pridanie zaznamu na zaciatok zoznamu
     if (position_of_new_node == 1 || (*number_of_nodes) == 1) {
         if ((*number_of_nodes) == 1)
             return new_node;
@@ -120,7 +124,7 @@ NODE* p(NODE* first, int* number_of_nodes)
             new_node->next = first;
             return new_node;
         }
-    }	// pridanie zaznamu do stredu zoznamu
+    }	/// pridanie zaznamu do stredu zoznamu
     else if (position_of_new_node > 1 && position_of_new_node <= (*number_of_nodes)) {
         int current_position = 1;
         while (current != NULL) {
@@ -132,7 +136,7 @@ NODE* p(NODE* first, int* number_of_nodes)
             current_position++;
         }
         return first;
-    }	// pridanie zaznamu na koniec zoznamu
+    }	/// pridanie zaznamu na koniec zoznamu
     else {
         for (int i = 1; i < (*number_of_nodes) - 1; i++)
             current = current->next;
@@ -141,7 +145,7 @@ NODE* p(NODE* first, int* number_of_nodes)
     }
 }
 
-NODE* z(NODE* first, int* number_of_nodes)
+NODE* z(NODE* first, int* number_of_nodes)  // z
 {
     NODE* current = first;
     int number_of_deleted_nodes = 0;
@@ -196,7 +200,7 @@ NODE* z(NODE* first, int* number_of_nodes)
     }
 }
 
-void h(NODE* first)
+void h(NODE* first) // h
 {
     int inserted_price;
     scanf("%d", &inserted_price);
@@ -226,7 +230,7 @@ void h(NODE* first)
     }
 }
 
-void a(NODE* first)
+void a(NODE* first) // a
 {
     NODE* current = first;
     int number_of_updated_nodes = 0;
@@ -272,7 +276,7 @@ void a(NODE* first)
     free(updated_node);
 }
 
-NODE* u(NODE* first)
+NODE* u(NODE* first)    // u
 {
     NODE* sorted_list = NULL;	// novy usporiadany zoznam
     NODE* current = first;
@@ -316,7 +320,7 @@ int main()
     while (1) {
         input = getchar();
         if (input == 'n')           loadFile(&head);
-        else if (input == 'v')		v(head);
+        else if (input == 'v')      printOutList(head);
         else if (input == 'p')      head = p(head, &number_of_nodes);
         else if (input == 'z')      head = z(head, &number_of_nodes);
         else if (input == 'h')		h(head);
