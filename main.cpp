@@ -162,7 +162,6 @@ void deleteNode(NODE** first)  // z
     if (*first == NULL)                     /* end the function if the list is empty */
         return;
 
-    unsigned int i;
     int deletions = 0;
     char nodePlace[StringLength];
     NODE* current = *first;
@@ -230,7 +229,6 @@ void updateNode(NODE* first) // a
     if (first == NULL)                  /* end the function if the list is empty */
         return;
 
-    unsigned int i;
     int updates = 0;
     char nodePlace[StringLength];
     NODE* current = first;
