@@ -16,62 +16,60 @@ typedef struct node
     struct node* next;
 } NODE;
 
-NODE* n(NODE* old_first, int* number_of_nodes)
+void freeList(NODE** firstNode)
 {
-    FILE* file = NULL;
-    char file_char;
-    NODE* first = NULL;
-    NODE* current = NULL;
-    int first_alocated = 0;		// flag, ktory urcuje ci je prvy zaznam alokovany
-
-    // uvolnenie pamati stareho zoznamu:
-    if (old_first != NULL) {
-        current = old_first->next;
-        while (current != NULL) {
-            free(old_first);
-            old_first = current;
-            current = current->next;
+    if (*firstNode != NULL) {
+        NODE* deleteNode = *firstNode;
+        while (deleteNode != NULL) {
+            *firstNode = (*firstNode)->next;
+            free(deleteNode);
+            deleteNode = *firstNode;
         }
-        free(old_first);
-        current = NULL;
     }
-    *number_of_nodes = 0;
+}
 
+void loadFile(NODE** first)
+{
+    freeList(first);
+
+    FILE* file = NULL;
     if ((file = fopen("reality.txt", "r")) == NULL) {
         printf("Zaznamy neboli nacitane\n");
-        return NULL;
+        return;
     }
 
-    // nacitanie zaznamov do linearneho zoznamu:
-    while ((file_char = fgetc(file)) != EOF) {
-        if (file_char == '&') {
-            getc(file);	    // nacita enter za znakom '&'
-            if (first_alocated == 0) {
-                first = (NODE*)malloc(sizeof(NODE));
-                current = first;
-                first_alocated = 1;
+    int charFromFile;
+    int numberOfNodes = 0;
+    NODE* current = NULL;
+
+    while ((charFromFile = fgetc(file)) != EOF) {
+        if (charFromFile == '&') {
+            getc(file);     /* scans the enter behind '&' */
+            if (numberOfNodes == 0) {
+                *first = (NODE*)malloc(sizeof(NODE));
+                current = *first;
+                current->next = NULL;
             }
             else {
                 current->next = (NODE*)malloc(sizeof(NODE));
                 current = current->next;
+                current->next = NULL;
             }
-            // fscanf() nacita string s medzerami az po '\n' bez '\n' a getc() nacita '\n'
+            /* fscanf() scans a string with spaces until '\n' without it and getc() scans the '\n' */
             fscanf(file, "%[^\n]s", current->category);	    getc(file);
             fscanf(file, "%[^\n]s", current->place);		getc(file);
             fscanf(file, "%[^\n]s", current->street);		getc(file);
             fscanf(file, "%d", &current->area);		        getc(file);
             fscanf(file, "%d", &current->price);			getc(file);
             fscanf(file, "%[^\n]s", current->description);
-            (*number_of_nodes)++;
+            numberOfNodes++;
         }
     }
-    if (first_alocated == 1)
-        current->next = NULL;
-    printf("Nacitalo sa %d zaznamov\n", *number_of_nodes);
 
     if (file != NULL)
         fclose(file);
-    return first;
+
+    printf("Nacitalo sa %d zaznamov\n", numberOfNodes);
 }
 
 void v(NODE* first)
@@ -311,13 +309,13 @@ NODE* u(NODE* first)
 
 int main()
 {
-    char input;
+    int input;
     int number_of_nodes = 0;
     NODE* head = NULL;
 
     while (1) {
         input = getchar();
-        if (input == 'n')           head = n(head, &number_of_nodes);
+        if (input == 'n')           loadFile(&head);
         else if (input == 'v')		v(head);
         else if (input == 'p')      head = p(head, &number_of_nodes);
         else if (input == 'z')      head = z(head, &number_of_nodes);
@@ -327,14 +325,7 @@ int main()
         else if (input == 'u')      head = u(head);
     }
 
-    if (head != NULL) {
-        NODE* delete_node = head;
-        while (delete_node != NULL) {
-            head = head->next;
-            free(delete_node);
-            delete_node = head;
-        }
-    }
+    freeList(&head);
 
     return 0;
 }
