@@ -72,14 +72,14 @@ void loadFile(NODE** first) // n
     printf("Nacitalo sa %d zaznamov\n", numberOfNodes);
 }
 
-void printNode(NODE** currentNode)
+void printNode(NODE* currentNode)
 {
-    printf("kategoria ponuky: %s\n", (*currentNode)->category);
-    printf("miesto ponuky: %s\n", (*currentNode)->place);
-    printf("ulica: %s\n", (*currentNode)->street);
-    printf("rozloha v m2: %d\n", (*currentNode)->area);
-    printf("cena: %d\n", (*currentNode)->price);
-    printf("popis: %s\n", (*currentNode)->description);
+    printf("kategoria ponuky: %s\n", currentNode->category);
+    printf("miesto ponuky: %s\n", currentNode->place);
+    printf("ulica: %s\n", currentNode->street);
+    printf("rozloha v m2: %d\n", currentNode->area);
+    printf("cena: %d\n", currentNode->price);
+    printf("popis: %s\n", currentNode->description);
 }
 
 void printOutList(NODE* first)  // v
@@ -92,56 +92,46 @@ void printOutList(NODE* first)  // v
 
     while (current != NULL) {
         printf("%d.\n", serialNumber++);
-        printNode(&current);
+        printNode(current);
         current = current->next;
     }
 }
 
-NODE* p(NODE* first, int* number_of_nodes)  // p
+void addNode(NODE** first)  // p
 {
-    NODE* new_node = NULL;
-    NODE* current = first;
-    int position_of_new_node;
-    scanf("%d", &position_of_new_node);
-
-    /// nacitanie poloziek do noveho zaznamu:
-    new_node = (NODE*)malloc(sizeof(NODE));
+    int newNodePosition;
+    scanf("%d", &newNodePosition);
     getchar();
-    scanf("%[^\n]s", new_node->category);		getchar();
-    scanf("%[^\n]s", new_node->place);			getchar();
-    scanf("%[^\n]s", new_node->street);
-    scanf("%d", &new_node->area);
-    scanf("%d", &new_node->price);				getchar();
-    scanf("%[^\n]s", new_node->description);	getchar();
-    new_node->next = NULL;
-    (*number_of_nodes)++;
 
-    ///	pridanie zaznamu na zaciatok zoznamu
-    if (position_of_new_node == 1 || (*number_of_nodes) == 1) {
-        if ((*number_of_nodes) == 1)
-            return new_node;
-        else {
-            new_node->next = first;
-            return new_node;
+    NODE* newNode = (NODE*)malloc(sizeof(NODE));            /// nacitanie poloziek do noveho zaznamu:
+    scanf("%[^\n]s", newNode->category);		getchar();
+    scanf("%[^\n]s", newNode->place);			getchar();
+    scanf("%[^\n]s", newNode->street);
+    scanf("%d", &newNode->area);
+    scanf("%d", &newNode->price);				getchar();
+    scanf("%[^\n]s", newNode->description);	    getchar();
+    newNode->next = NULL;
+
+    if (newNodePosition <= 1 || *first == NULL) {     /* insert at the beginning of the list */
+        if (*first != NULL) {
+            newNode->next = *first;
+            *first = newNode;
         }
-    }	/// pridanie zaznamu do stredu zoznamu
-    else if (position_of_new_node > 1 && position_of_new_node <= (*number_of_nodes)) {
-        int current_position = 1;
-        while (current != NULL) {
-            if (position_of_new_node == current_position + 1) {
-                new_node->next = current->next;
-                current->next = new_node;
+        else *first = newNode;
+    }
+    else {      /* insert somewhere into the list */
+        NODE* current = *first;
+        int currentPosition = 1;
+        while (current->next != NULL) {
+            if (newNodePosition == currentPosition + 1) {
+                newNode->next = current->next;
+                current->next = newNode;
+                return;
             }
             current = current->next;
-            current_position++;
+            currentPosition++;
         }
-        return first;
-    }	/// pridanie zaznamu na koniec zoznamu
-    else {
-        for (int i = 1; i < (*number_of_nodes) - 1; i++)
-            current = current->next;
-        current->next = new_node;
-        return first;
+        current->next = newNode;    /* insert behind the last position if not inserted yet */
     }
 }
 
@@ -321,7 +311,7 @@ int main()
         input = getchar();
         if (input == 'n')           loadFile(&head);
         else if (input == 'v')      printOutList(head);
-        else if (input == 'p')      head = p(head, &number_of_nodes);
+        else if (input == 'p')      addNode(&head);
         else if (input == 'z')      head = z(head, &number_of_nodes);
         else if (input == 'h')		h(head);
         else if (input == 'a')		a(head);
