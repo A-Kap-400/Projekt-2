@@ -162,14 +162,13 @@ void deleteNode(NODE** first)  // z
     if (*first == NULL)                     /* end the function if the list is empty */
         return;
 
-    stringToLower(deletePlace);
-
     unsigned int i;
     int deletions = 0;
     char nodePlace[StringLength];
     NODE* current = *first;
     NODE* following = current->next;
 
+    stringToLower(deletePlace);
     while (following != NULL) {             /* deleting all nodes if necessary except the first node */
         copyString(following->place, nodePlace);
         stringToLower(nodePlace);
@@ -221,50 +220,39 @@ void searchByPrice(NODE* first) // h
         printf("V ponuke su len reality s vyssou cenou\n");
 }
 
-void a(NODE* first) // a
+void updateNode(NODE* first) // a
 {
-    NODE* current = first;
-    int number_of_updated_nodes = 0;
-
-    char update_these_places[StringLength];
     getchar();
-    gets_s(update_these_places, StringLength);
+    char updatePlace[StringLength];
+    gets_s(updatePlace, StringLength);
+    NODE* updatedNode = scanNode();     /* scan the updated items */
 
-    NODE* updated_node = (NODE*)malloc(sizeof(NODE));
-    scanf("%[^\n]s", updated_node->category);	getchar();
-    scanf("%[^\n]s", updated_node->place);		getchar();
-    scanf("%[^\n]s", updated_node->street);
-    scanf("%d", &updated_node->area);
-    scanf("%d", &updated_node->price);				getchar();
-    scanf("%[^\n]s", updated_node->description);		getchar();
-    updated_node->next = NULL;
-
-    if (current == NULL)	// ak je zoznam prazdny, neaktualizuje sa nic
+    if (first == NULL)                  /* end the function if the list is empty */
         return;
 
     unsigned int i;
-    for (i = 0; i < strlen(update_these_places); i++)
-        update_these_places[i] = tolower(update_these_places[i]);
+    int updates = 0;
+    char nodePlace[StringLength];
+    NODE* current = first;
 
-    char place_from_node[StringLength];
+    stringToLower(updatePlace);
     while (current != NULL) {
-        for (i = 0; i < strlen(current->place); i++)
-            place_from_node[i] = tolower(current->place[i]);
-        place_from_node[i] = '\0';
-
-        if (strstr(place_from_node, update_these_places) != NULL) {
-            strcpy(current->category, updated_node->category);
-            strcpy(current->place, updated_node->place);
-            strcpy(current->street, updated_node->street);
-            current->area = updated_node->area;
-            current->price = updated_node->price;
-            strcpy(current->description, updated_node->description);
-            number_of_updated_nodes++;
+        copyString(current->place, nodePlace);
+        stringToLower(nodePlace);
+        if (strstr(nodePlace, updatePlace) != NULL) {
+            strcpy(current->category, updatedNode->category);
+            strcpy(current->place, updatedNode->place);
+            strcpy(current->street, updatedNode->street);
+            current->area = updatedNode->area;
+            current->price = updatedNode->price;
+            strcpy(current->description, updatedNode->description);
+            updates++;
         }
         current = current->next;
     }
-    printf("Aktualizovalo sa %d zaznamov\n", number_of_updated_nodes);
-    free(updated_node);
+
+    printf("Aktualizovalo sa %d zaznamov\n", updates);
+    free(updatedNode);
 }
 
 NODE* u(NODE* first)    // u
@@ -305,7 +293,6 @@ NODE* u(NODE* first)    // u
 int main()
 {
     int input;
-    int number_of_nodes = 0;
     NODE* head = NULL;
 
     while (1) {
@@ -315,7 +302,7 @@ int main()
         else if (input == 'p')      addNode(&head);
         else if (input == 'z')      deleteNode(&head);
         else if (input == 'h')      searchByPrice(head);
-        else if (input == 'a')		a(head);
+        else if (input == 'a')		updateNode(head);
         else if (input == 'k')		break;
         else if (input == 'u')      head = u(head);
     }
