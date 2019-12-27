@@ -141,62 +141,62 @@ void addNode(NODE** first)  // p
     }
 }
 
-NODE* z(NODE* first, int* number_of_nodes)  // z
+void stringToLower(char buffer[])
 {
-    NODE* current = first;
-    int number_of_deleted_nodes = 0;
+    for (int i = 0; i < strlen(buffer); i++)
+        buffer[i] = tolower(buffer[i]);
+}
 
-    char delete_these_places[StringLength];
+void copyString(char original[], char copy[])
+{
+    for (int i = 0; i < strlen(original); i++)
+        copy[i] = original[i];
+}
+
+void deleteNode(NODE** first)  // z
+{
     getchar();
-    gets_s(delete_these_places, StringLength);
+    char deletePlace[StringLength];
+    gets_s(deletePlace, StringLength);
 
-    if (current == NULL)
-        return NULL;
+    if (*first == NULL)                     /* end the function if the list is empty */
+        return;
+
+    stringToLower(deletePlace);
 
     unsigned int i;
-    NODE* current_next = current->next;
+    int deletions = 0;
+    char nodePlace[StringLength];
+    NODE* current = *first;
+    NODE* following = current->next;
 
-    for (i = 0; i < strlen(delete_these_places); i++)	// zmeni zadany text na male pismena
-        delete_these_places[i] = tolower(delete_these_places[i]);
-
-    char place_from_node[StringLength];
-    while (current_next != NULL) {
-        for (i = 0; i < strlen(current_next->place); i++)	// zmeni nazov miesta v zazname na male pismena
-            place_from_node[i] = tolower(current_next->place[i]);
-        place_from_node[i] = '\0';
-
-        if (strstr(place_from_node, delete_these_places) != NULL) {	// vymazavanie vsetkych zaznamov, ktore sa zhoduju, okrem prveho
+    while (following != NULL) {             /* deleting all nodes if necessary except the first node */
+        copyString(following->place, nodePlace);
+        stringToLower(nodePlace);
+        if (strstr(nodePlace, deletePlace) != NULL) {
             current->next = current->next->next;
-            free(current_next);
-            number_of_deleted_nodes++;
-            current_next = current->next;
+            free(following);
+            deletions++;
+            following = current->next;
             continue;
         }
         current = current->next;
-        current_next = current->next;
+        following = current->next;
     }
 
-    current = first;
-    for (i = 0; i < strlen(current->place); i++)
-        place_from_node[i] = tolower(current->place[i]);
-    place_from_node[i] = '\0';
-
-    if (strstr(place_from_node, delete_these_places) != NULL) {	// vymazanie prveho zaznamu, ak sa zhoduje
-        current_next = current->next;
+    current = *first;                       /* deleting the first node if necessary */
+    copyString(current->place, nodePlace);
+    stringToLower(nodePlace);
+    if (strstr(nodePlace, deletePlace) != NULL) {
+        *first = current->next;
         free(current);
-        number_of_deleted_nodes++;
-        *number_of_nodes -= number_of_deleted_nodes;
-        printf("Vymazalo sa %d zaznamov\n", number_of_deleted_nodes);
-        return current_next;
+        deletions++;
     }
-    else {
-        *number_of_nodes -= number_of_deleted_nodes;
-        printf("Vymazalo sa %d zaznamov\n", number_of_deleted_nodes);
-        return current;
-    }
+
+    printf("Vymazalo sa %d zaznamov\n", deletions);
 }
 
-void h(NODE* first) // h
+void searchByPrice(NODE* first) // h
 {
     int insertedPrice;
     scanf("%d", &insertedPrice);
@@ -313,8 +313,8 @@ int main()
         if (input == 'n')           loadFile(&head);
         else if (input == 'v')      printOutList(head);
         else if (input == 'p')      addNode(&head);
-        else if (input == 'z')      head = z(head, &number_of_nodes);
-        else if (input == 'h')		h(head);
+        else if (input == 'z')      deleteNode(&head);
+        else if (input == 'h')      searchByPrice(head);
         else if (input == 'a')		a(head);
         else if (input == 'k')		break;
         else if (input == 'u')      head = u(head);
