@@ -97,20 +97,26 @@ void printOutList(NODE* first)  // v
     }
 }
 
+NODE* scanNode()
+{
+    NODE* newNode = (NODE*)malloc(sizeof(NODE));        /* writes the new items into a new node */
+    scanf("%[^\n]s", newNode->category);        getchar();
+    scanf("%[^\n]s", newNode->place);           getchar();
+    scanf("%[^\n]s", newNode->street);          getchar();
+    scanf("%d", &newNode->area);                getchar();
+    scanf("%d", &newNode->price);               getchar();
+    scanf("%[^\n]s", newNode->description);     getchar();
+    newNode->next = NULL;
+    return newNode;
+}
+
 void addNode(NODE** first)  // p
 {
     int newNodePosition;
     scanf("%d", &newNodePosition);
     getchar();
 
-    NODE* newNode = (NODE*)malloc(sizeof(NODE));            /// nacitanie poloziek do noveho zaznamu:
-    scanf("%[^\n]s", newNode->category);		getchar();
-    scanf("%[^\n]s", newNode->place);			getchar();
-    scanf("%[^\n]s", newNode->street);
-    scanf("%d", &newNode->area);
-    scanf("%d", &newNode->price);				getchar();
-    scanf("%[^\n]s", newNode->description);	    getchar();
-    newNode->next = NULL;
+    NODE* newNode = scanNode();
 
     if (newNodePosition <= 1 || *first == NULL) {     /* insert at the beginning of the list */
         if (*first != NULL) {
