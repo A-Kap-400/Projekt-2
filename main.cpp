@@ -118,14 +118,14 @@ void addNode(NODE** first)  // p
 
     NODE* newNode = scanNode();
 
-    if (newNodePosition <= 1 || *first == NULL) {     /* insert at the beginning of the list */
+    if (newNodePosition <= 1 || *first == NULL) {       /* insert at the beginning of the list */
         if (*first != NULL) {
             newNode->next = *first;
             *first = newNode;
         }
         else *first = newNode;
     }
-    else {      /* insert somewhere into the list */
+    else {                                              /* insert somewhere into the list */
         NODE* current = *first;
         int currentPosition = 1;
         while (current->next != NULL) {
@@ -137,7 +137,7 @@ void addNode(NODE** first)  // p
             current = current->next;
             currentPosition++;
         }
-        current->next = newNode;    /* insert behind the last position if not inserted yet */
+        current->next = newNode;                        /* insert behind the last position if not inserted yet */
     }
 }
 
@@ -198,32 +198,27 @@ NODE* z(NODE* first, int* number_of_nodes)  // z
 
 void h(NODE* first) // h
 {
-    int inserted_price;
-    scanf("%d", &inserted_price);
+    int insertedPrice;
+    scanf("%d", &insertedPrice);
 
-    if (first == NULL)	// ak zoznam neexistuje, tak funkcia konci
+    if (first == NULL)	                    /* end the function if the list is empty */
         return;
 
+    int nodeExists = 0;	                    /* flag describing whether a node with a smaller price was found */
+    int serialNumber = 1;
     NODE* current = first;
-    int serial_number = 1;
-    int node_exists = 0;	// flag, ktory urcuje ci sa vypisal aspon jeden zaznam
+
     while (current != NULL) {
-        if (inserted_price >= current->price) {
-            printf("%d.\n", serial_number++);
-            printf("kategoria ponuky: %s\n", current->category);
-            printf("miesto ponuky: %s\n", current->place);
-            printf("ulica: %s\n", current->street);
-            printf("rozloha v m2: %d\n", current->area);
-            printf("cena: %d\n", current->price);
-            printf("popis: %s\n", current->description);
-            node_exists = 1;
+        if (insertedPrice >= current->price) {
+            printf("%d.\n", serialNumber++);
+            printNode(current);
+            nodeExists = 1;
         }
         current = current->next;
     }
 
-    if (node_exists == 0) {
+    if (nodeExists == 0)
         printf("V ponuke su len reality s vyssou cenou\n");
-    }
 }
 
 void a(NODE* first) // a
@@ -236,12 +231,12 @@ void a(NODE* first) // a
     gets_s(update_these_places, StringLength);
 
     NODE* updated_node = (NODE*)malloc(sizeof(NODE));
-    scanf("%[^\n]s", &updated_node->category);	getchar();
-    scanf("%[^\n]s", &updated_node->place);		getchar();
-    scanf("%[^\n]s", &updated_node->street);
+    scanf("%[^\n]s", updated_node->category);	getchar();
+    scanf("%[^\n]s", updated_node->place);		getchar();
+    scanf("%[^\n]s", updated_node->street);
     scanf("%d", &updated_node->area);
     scanf("%d", &updated_node->price);				getchar();
-    scanf("%[^\n]s", &updated_node->description);		getchar();
+    scanf("%[^\n]s", updated_node->description);		getchar();
     updated_node->next = NULL;
 
     if (current == NULL)	// ak je zoznam prazdny, neaktualizuje sa nic
@@ -326,6 +321,5 @@ int main()
     }
 
     freeList(&head);
-
     return 0;
 }
