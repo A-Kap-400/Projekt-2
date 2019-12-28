@@ -219,6 +219,16 @@ void searchByPrice(NODE* first) // h
         printf("V ponuke su len reality s vyssou cenou\n");
 }
 
+void rewriteNode(NODE* original, NODE* updated)
+{
+    strcpy(original->category, updated->category);
+    strcpy(original->place, updated->place);
+    strcpy(original->street, updated->street);
+    original->area = updated->area;
+    original->price = updated->price;
+    strcpy(original->description, updated->description);
+}
+
 void updateNode(NODE* first) // a
 {
     getchar();
@@ -238,12 +248,7 @@ void updateNode(NODE* first) // a
         copyString(current->place, nodePlace);
         stringToLower(nodePlace);
         if (strstr(nodePlace, updatePlace) != NULL) {
-            strcpy(current->category, updatedNode->category);
-            strcpy(current->place, updatedNode->place);
-            strcpy(current->street, updatedNode->street);
-            current->area = updatedNode->area;
-            current->price = updatedNode->price;
-            strcpy(current->description, updatedNode->description);
+            rewriteNode(current, updatedNode);
             updates++;
         }
         current = current->next;
