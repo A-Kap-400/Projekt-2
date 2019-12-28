@@ -159,7 +159,7 @@ void deleteNode(NODE** first)  // z
     char deletePlace[StringLength];
     gets_s(deletePlace, StringLength);
 
-    if (*first == NULL)                     /* end the function if the list is empty */
+    if (*first == NULL)                         /* end the function if the list is empty */
         return;
 
     int deletions = 0;
@@ -168,7 +168,7 @@ void deleteNode(NODE** first)  // z
     NODE* following = current->next;
 
     stringToLower(deletePlace);
-    while (following != NULL) {             /* deleting all nodes if necessary except the first node */
+    while (following != NULL) {                 /* deleting all nodes if necessary except the first node */
         copyString(following->place, nodePlace);
         stringToLower(nodePlace);
         if (strstr(nodePlace, deletePlace) != NULL) {
@@ -182,7 +182,7 @@ void deleteNode(NODE** first)  // z
         following = current->next;
     }
 
-    current = *first;                       /* deleting the first node if necessary */
+    current = *first;                           /* deleting the first node if necessary */
     copyString(current->place, nodePlace);
     stringToLower(nodePlace);
     if (strstr(nodePlace, deletePlace) != NULL) {
@@ -199,10 +199,10 @@ void searchByPrice(NODE* first) // h
     int insertedPrice;
     scanf("%d", &insertedPrice);
 
-    if (first == NULL)	                    /* end the function if the list is empty */
+    if (first == NULL)	                        /* end the function if the list is empty */
         return;
 
-    int nodeExists = 0;	                    /* flag describing whether a node with a smaller price was found */
+    int nodeExists = 0;	                        /* flag describing whether a node with a smaller price was found */
     int serialNumber = 1;
     NODE* current = first;
 
@@ -224,9 +224,9 @@ void updateNode(NODE* first) // a
     getchar();
     char updatePlace[StringLength];
     gets_s(updatePlace, StringLength);
-    NODE* updatedNode = scanNode();     /* scan the updated items */
+    NODE* updatedNode = scanNode();             /* scan the updated items */
 
-    if (first == NULL)                  /* end the function if the list is empty */
+    if (first == NULL)                          /* end the function if the list is empty */
         return;
 
     int updates = 0;
@@ -253,39 +253,44 @@ void updateNode(NODE* first) // a
     free(updatedNode);
 }
 
-NODE* u(NODE* first)    // u
-{
-    NODE* sorted_list = NULL;	// novy usporiadany zoznam
-    NODE* current = first;
-
-    if (current == NULL) {
-        printf("Zoznam nie je mozne usporiadat\n");
-        return NULL;
+void sortedInsert(NODE** sortedHead, NODE* inserting)
+{                                               /* inserting to first position */
+    if (*sortedHead == NULL ||
+    (strcmp((*sortedHead)->place, inserting->place) > 0) ||
+    (strcmp((*sortedHead)->place, inserting->place) == 0 && (*sortedHead)->price >= inserting->price)) {
+        inserting->next = *sortedHead;
+        *sortedHead = inserting;
     }
+    else {                                      /* inserting to the other places */
+        NODE* sortedCurrent = *sortedHead;
+        while (sortedCurrent->next != NULL && (strcmp(sortedCurrent->next->place, inserting->place) <= 0)) {
+            if (strcmp(sortedCurrent->next->place, inserting->place) == 0 && sortedCurrent->next->price > inserting->price)
+                break;                          /* find the node, after which to insert */
+            sortedCurrent = sortedCurrent->next;
+        }
+        inserting->next = sortedCurrent->next;
+        sortedCurrent->next = inserting;        /* insert the new node to its place */
+    }
+}
+
+void insertionSort(NODE** first)    // u
+{
+    if (*first == NULL) {
+        printf("Zoznam nie je mozne usporiadat\n");
+        return;                                 /* end the function if the list is empty */
+    }
+
+    NODE* sortedList = NULL;	                /* new sorted list */
+    NODE* current = *first;
 
     while (current != NULL) {
-        NODE* currnet_next = current->next;		// krokuje po povodnom zozname a pamata si miesto pre 'aktualny'
-        //	umiestnenie na prvu poziciu:
-        if (sorted_list == NULL || (strcmp(sorted_list->place, current->place) > 0) || (strcmp(sorted_list->place, current->place) == 0 && sorted_list->price >= current->price)) {
-            current->next = sorted_list;
-            sorted_list = current;
-        }
-            //	umiestnenie na ostatne pozicie:
-        else {
-            NODE* sorted_current = sorted_list;		// urci, za ktory zaznam v zozname 'usporiadane' sa vklada aktualny zaznam
-            while (sorted_current->next != NULL && (strcmp(sorted_current->next->place, current->place) <= 0)) {
-                if (strcmp(sorted_current->next->place, current->place) == 0 && sorted_current->next->price > current->price)
-                    break;
-                sorted_current = sorted_current->next;
-            }
-            current->next = sorted_current->next;
-            sorted_current->next = current;
-        }
-        current = currnet_next;		// pokracuje na dalsiu polozku v povodnom zozname
+        NODE* following = current->next;        /* remembers which node is going to be sorted next in the original list, */
+        sortedInsert(&sortedList, current);     /* inserting the current node to its new position into the sorted list */
+        current = following;                    /* go to the next node */
     }
 
+    *first = sortedList;
     printf("Zaznamy boli usporiadane\n");
-    return sorted_list;
 }
 
 int main()
@@ -302,7 +307,7 @@ int main()
         else if (input == 'h')      searchByPrice(head);
         else if (input == 'a')		updateNode(head);
         else if (input == 'k')		break;
-        else if (input == 'u')      head = u(head);
+        else if (input == 'u')      insertionSort(&head);
     }
 
     freeList(&head);
