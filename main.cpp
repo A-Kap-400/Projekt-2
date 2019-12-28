@@ -310,8 +310,8 @@ int main()
         else if (input == 'p')      addNode(&head);
         else if (input == 'z')      deleteNode(&head);
         else if (input == 'h')      searchByPrice(head);
-        else if (input == 'a')		updateNode(head);
-        else if (input == 'k')		break;
+        else if (input == 'a')      updateNode(head);
+        else if (input == 'k')      break;
         else if (input == 'u')      insertionSort(&head);
     }
 
