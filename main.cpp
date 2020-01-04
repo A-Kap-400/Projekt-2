@@ -298,6 +298,23 @@ void insertionSort(NODE** first)    // u
     printf("Zaznamy boli usporiadane\n");
 }
 
+void reverseList(NODE** first)
+{
+    NODE* previous = NULL;
+    NODE* current = *first;
+    NODE* following = NULL;
+
+    while (current != NULL) {
+        following = current->next;
+        current->next = previous;
+        previous = current;
+        current = following;
+    }
+
+    *first = previous;
+    printOutList(*first);
+}
+
 int main()
 {
     int input;
@@ -313,6 +330,7 @@ int main()
         else if (input == 'a')      updateNode(head);
         else if (input == 'k')      break;
         else if (input == 'u')      insertionSort(&head);
+        else if (input == 'o')      reverseList(&head);
     }
 
     freeList(&head);
