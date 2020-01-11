@@ -144,9 +144,7 @@ void addNode(NODE** first)  // p
 void stringToLower(char buffer[])
 {
     for (int i = 0; i < strlen(buffer); i++)
-        if (buffer[i] >= 'A' && buffer[i] <= 'Z')
-            buffer[i] += 'A' - 'a';
-        //buffer[i] = tolower(buffer[i]);
+        buffer[i] = tolower(buffer[i]);
 }
 
 void copyString(char original[], char copy[])
