@@ -56,12 +56,12 @@ void loadFile(NODE** first) // n
                 current->next = NULL;
             }
             /* fscanf() scans a string with spaces until '\n' without it and getc() scans the '\n' */
-            fscanf_s(file, "%[^\n]s", current->category);	    getc(file);
-            fscanf_s(file, "%[^\n]s", current->place);        getc(file);
-            fscanf_s(file, "%[^\n]s", current->street);       getc(file);
-            fscanf_s(file, "%d", &current->area);	            getc(file);
-            fscanf_s(file, "%d", &current->price);            getc(file);
-            fscanf_s(file, "%[^\n]s", current->description);
+            fscanf(file, "%[^\n]s", current->category);     getc(file);
+            fscanf(file, "%[^\n]s", current->place);        getc(file);
+            fscanf(file, "%[^\n]s", current->street);       getc(file);
+            fscanf(file, "%d", &current->area);             getc(file);
+            fscanf(file, "%d", &current->price);            getc(file);
+            fscanf(file, "%[^\n]s", current->description);
             numberOfNodes++;
         }
     }
@@ -199,7 +199,7 @@ void deleteNode(NODE** first)  // z
 void searchByPrice(NODE* first) // h
 {
     int insertedPrice;
-    scanf_s("%d", &insertedPrice);
+    scanf("%d", &insertedPrice);
 
     if (first == NULL)	                        /* end the function if the list is empty */
         return;
