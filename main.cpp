@@ -56,11 +56,11 @@ void loadFile(NODE** first) // n
                 current->next = NULL;
             }
             /* fscanf() scans a string with spaces until '\n' without it and getc() scans the '\n' */
-            fscanf(file, "%[^\n]s", current->category);	    getc(file);
-            fscanf(file, "%[^\n]s", current->place);		getc(file);
-            fscanf(file, "%[^\n]s", current->street);		getc(file);
-            fscanf(file, "%d", &current->area);		        getc(file);
-            fscanf(file, "%d", &current->price);			getc(file);
+            fscanf(file, "%[^\n]s", current->category);     getc(file);
+            fscanf(file, "%[^\n]s", current->place);        getc(file);
+            fscanf(file, "%[^\n]s", current->street);       getc(file);
+            fscanf(file, "%d", &current->area);             getc(file);
+            fscanf(file, "%d", &current->price);            getc(file);
             fscanf(file, "%[^\n]s", current->description);
             numberOfNodes++;
         }
@@ -298,8 +298,11 @@ void insertionSort(NODE** first)    // u
     printf("Zaznamy boli usporiadane\n");
 }
 
-void reverseList(NODE** first)
+void reverseList(NODE** first)  // o
 {
+    if (*first == NULL)
+        return;
+
     NODE* previous = NULL;
     NODE* current = *first;
     NODE* following = NULL;
