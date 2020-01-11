@@ -56,12 +56,12 @@ void loadFile(NODE** first) // n
                 current->next = NULL;
             }
             /* fscanf() scans a string with spaces until '\n' without it and getc() scans the '\n' */
-            fscanf(file, "%[^\n]s", current->category);	    getc(file);
-            fscanf(file, "%[^\n]s", current->place);		getc(file);
-            fscanf(file, "%[^\n]s", current->street);		getc(file);
-            fscanf(file, "%d", &current->area);		        getc(file);
-            fscanf(file, "%d", &current->price);			getc(file);
-            fscanf(file, "%[^\n]s", current->description);
+            fscanf_s(file, "%[^\n]s", current->category);	    getc(file);
+            fscanf_s(file, "%[^\n]s", current->place);        getc(file);
+            fscanf_s(file, "%[^\n]s", current->street);       getc(file);
+            fscanf_s(file, "%d", &current->area);	            getc(file);
+            fscanf_s(file, "%d", &current->price);            getc(file);
+            fscanf_s(file, "%[^\n]s", current->description);
             numberOfNodes++;
         }
     }
@@ -144,7 +144,9 @@ void addNode(NODE** first)  // p
 void stringToLower(char buffer[])
 {
     for (int i = 0; i < strlen(buffer); i++)
-        buffer[i] = tolower(buffer[i]);
+        if (buffer[i] >= 'A' && buffer[i] <= 'Z')
+            buffer[i] += 'A' - 'a';
+        //buffer[i] = tolower(buffer[i]);
 }
 
 void copyString(char original[], char copy[])
@@ -197,7 +199,7 @@ void deleteNode(NODE** first)  // z
 void searchByPrice(NODE* first) // h
 {
     int insertedPrice;
-    scanf("%d", &insertedPrice);
+    scanf_s("%d", &insertedPrice);
 
     if (first == NULL)	                        /* end the function if the list is empty */
         return;
@@ -298,8 +300,11 @@ void insertionSort(NODE** first)    // u
     printf("Zaznamy boli usporiadane\n");
 }
 
-void reverseList(NODE** first)
+void reverseList(NODE** first)  // o
 {
+    if (*first == NULL)
+        return;
+
     NODE* previous = NULL;
     NODE* current = *first;
     NODE* following = NULL;
