@@ -113,5 +113,8 @@ správu Zoznam nie je mozne usporiadat v prípade ak zoznam je
 prázdny, alebo správu Zaznamy boli usporiadane. Správnost 
 usporiadania si overte výpisom upraveného zoznamu. 
 
+	o
+Obrati poradie zaznamov v zozname a vypise otocený zoznam.
+Ak neexistuje ziaden zaznam nevykona nic.
 
 
